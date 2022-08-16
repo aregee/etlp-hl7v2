@@ -1,10 +1,11 @@
 # etlp-hl7v2
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to ... parse and transduce hl7 messages.
+
 
 ## Usage
 
-FIXME
+### TODO
 
 ## License
 
