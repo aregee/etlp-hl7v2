@@ -1,0 +1,1207 @@
+MFR_M05:
+  mf_query: [MFE, LOC, LCH*, LRL*, LDP+, LCH*, LCC*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, 'QRF?', MFI, mf_query+, 'DSC?']
+QBP_Q11:
+  msg: [MSH, SFT*, QPD, RCP, 'DSC?']
+DFT_P11:
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  financial: [FT1, financial_procedure*, financial_common_order*, DG1*, 'DRG?', GT1*, financial_insurance*]
+  financial_timing_quantity: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, 'PV1?', 'PV2?', ROL*, DB1*, common_order*, DG1*, 'DRG?', GT1*, insurance*, 'ACC?', financial+]
+  financial_common_order: ['ORC?', financial_timing_quantity*, 'financial_order?', financial_observation*]
+  financial_order: [OBR, NTE*]
+  timing_quantity: [TQ1, TQ2*]
+  common_order: ['ORC?', timing_quantity*, 'order?', observation*]
+  order: [OBR, NTE*]
+  financial_observation: [OBX, NTE*]
+  financial_procedure: [PR1, ROL*]
+  financial_insurance: [IN1, 'IN2?', IN3*, ROL*]
+OUL_R24:
+  pidpd1nte_suppgrp: [PID, 'PD1?', NTE*]
+  pv1pv2_suppgrp: [PV1, 'PV2?']
+  tq1tq2_suppgrp: [TQ1, TQ2*]
+  container: [SAC, 'INV?']
+  spmobxsacinv_suppgrp: [SPM, OBX*, container*]
+  obxtcdsidnte_suppgrp: [OBX, 'TCD?', SID*, NTE*]
+  order: [OBR, 'ORC?', NTE*, tq1tq2_suppgrp*, spmobxsacinv_suppgrp*, obxtcdsidnte_suppgrp*, CTI*]
+  msg: [MSH, SFT*, 'NTE?', 'pidpd1nte_suppgrp?', 'pv1pv2_suppgrp?', order+, 'DSC?']
+NMD_N02:
+  clock: [NCK, NTE*]
+  app_stats: [NST, NTE*]
+  app_status: [NSC, NTE*]
+  clock_and_stats_with_notes: ['clock?', 'app_stats?', 'app_status?']
+  msg: [MSH, SFT*, clock_and_stats_with_notes+]
+BAR_P10:
+  procedure: [PR1, 'GP2?']
+  msg: [MSH, SFT*, EVN, PID, PV1, DG1*, GP1, procedure*]
+RAR_RAR:
+  patient: [PID, NTE*]
+  encoding: [RXE, RXR+, RXC*]
+  order: [ORC, 'encoding?', RXA+, RXR]
+  definition: [QRD, 'QRF?', 'patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, definition+, 'DSC?']
+RSP_K11:
+  row_definition: [RDF, RDT*]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, 'row_definition?', 'DSC?']
+DFT_P03:
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  financial: [FT1, 'NTE?', financial_procedure*, financial_common_order*]
+  financial_timing_quantity: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, 'PV1?', 'PV2?', ROL*, DB1*, common_order*, financial+, DG1*, 'DRG?', GT1*, insurance*, 'ACC?']
+  financial_common_order: ['ORC?', financial_timing_quantity*, 'financial_order?', financial_observation*]
+  financial_order: [OBR, NTE*]
+  timing_quantity: [TQ1, TQ2*]
+  common_order: ['ORC?', timing_quantity*, 'order?', observation*]
+  order: [OBR, NTE*]
+  financial_observation: [OBX, NTE*]
+  financial_procedure: [PR1, ROL*]
+MFN_M04:
+  mf_cdm: [MFE, CDM, PRC*]
+  msg: [MSH, SFT*, MFI, mf_cdm+]
+RPI_I04:
+  provider: [PRD, CTD*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  guarantor_insurance: [GT1*, insurance+]
+  msg: [MSH, SFT*, MSA, provider+, PID, NK1*, 'guarantor_insurance?', NTE*]
+VXU_V04:
+  patient: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  timing: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  order: [ORC, timing*, RXA, 'RXR?', observation*]
+  msg: [MSH, SFT*, PID, 'PD1?', NK1*, 'patient?', GT1*, insurance*, order*]
+BPS_O29:
+  patient_visit: [PV1, 'PV2?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?']
+  timing: [TQ1, TQ2*]
+  product: [BPX, NTE*]
+  order: [ORC, timing*, BPO, NTE*, product*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+ORL_O22:
+  timing: [TQ1, TQ2*]
+  specimen: [SPM, SAC*]
+  observation_request: [OBR, specimen*]
+  order: [ORC, timing*, 'observation_request?']
+  patient: [PID, order*]
+  response: ['patient?']
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+NMR_N01:
+  clock_and_stats_with_notes_alt: ['NCK?', NTE*, 'NST?', NTE*, 'NSC?', NTE*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QRD?', clock_and_stats_with_notes_alt+]
+OMI_O23:
+  patient_visit: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  timing: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  order: [ORC, timing*, OBR, NTE*, 'CTD?', DG1*, observation*, IPC+]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+PPP_PCB:
+  pathway_role: [ROL, VAR*]
+  problem_observation: [OBX, NTE*]
+  goal_observation: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  goal: [GOL, NTE*, VAR*, goal_role*, goal_observation*]
+  msg: [MSH, SFT*, PID, 'patient_visit?', pathway+]
+  problem: [PRB, NTE*, VAR*, problem_role*, problem_observation*, goal*, order*]
+  obr_suppgrp: ['OBR?']
+  goal_role: [ROL, VAR*]
+  pathway: [PTH, NTE*, VAR*, pathway_role*, problem*]
+  order_detail: [obr_suppgrp, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+ORF_R04:
+  pidnte_suppgrp: [PID, NTE*]
+  tq1tq2_suppgrp: [TQ1, TQ2*]
+  obxnte_suppgrp: ['OBX?', NTE*]
+  orcobrntetq1tq2ctdobxntecti_suppgrp: ['ORC?', OBR, NTE*, tq1tq2_suppgrp*, 'CTD?', obxnte_suppgrp+, CTI*]
+  pidnteorcobrntetq1tq2ctdobxntecti_suppgrp: ['pidnte_suppgrp?', orcobrntetq1tq2ctdobxntecti_suppgrp+]
+  msg: [MSH, SFT*, MSA, QRD, 'QRF?', pidnteorcobrntetq1tq2ctdobxntecti_suppgrp+, ERR*, 'QAK?', 'DSC?']
+QBP_Q21:
+  msg: [MSH, SFT*, QPD, RCP, 'DSC?']
+ADT_A06:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, 'MRG?', NK1*, PV1, 'PV2?', ROL*, DB1*, OBX*, AL1*, DG1*, 'DRG?', procedure*, GT1*, insurance*, 'ACC?', 'UB1?', 'UB2?']
+QRY_R02:
+  msg: [MSH, SFT*, QRD, QRF]
+EQQ_Q04:
+  msg: [MSH, SFT*, EQL, 'DSC?']
+ADT_A03:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, NK1*, PV1, 'PV2?', ROL*, DB1*, AL1*, DG1*, 'DRG?', procedure*, OBX*, GT1*, insurance*, 'ACC?', 'PDA?']
+INR_U06:
+  msg: [MSH, SFT*, EQU, INV+, 'ROL?']
+MFN_Znn:
+  mf_site_defined: [MFE, '']
+  msg: [MSH, SFT*, MFI, mf_site_defined+]
+RQI_I01:
+  provider: [PRD, CTD*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  guarantor_insurance: [GT1*, insurance+]
+  msg: [MSH, SFT*, provider+, PID, NK1*, 'guarantor_insurance?', NTE*]
+RDY_K15:
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, DSP*, 'DSC?']
+PPG_PCG:
+  pathway_role: [ROL, VAR*]
+  problem_observation: [OBX, NTE*]
+  goal_observation: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  goal: [GOL, NTE*, VAR*, goal_role*, goal_observation*, problem*, order*]
+  msg: [MSH, SFT*, PID, 'patient_visit?', pathway+]
+  problem: [PRB, NTE*, VAR*, problem_role*, problem_observation*]
+  obr_suppgrp: ['OBR?']
+  goal_role: [ROL, VAR*]
+  pathway: [PTH, NTE*, VAR*, pathway_role*, goal*]
+  order_detail: [obr_suppgrp, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+RRG_O16:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  timing_give: [TQ1, TQ2*]
+  give: [RXG, timing_give+, RXR+, RXC*]
+  order: [ORC, timing*, 'give?']
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+ORP_O10:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  component: [RXC, NTE*]
+  order_detail: [RXO, NTE*, RXR+, component*]
+  order: [ORC, timing*, 'order_detail?']
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+RAS_O17:
+  patient: [PID, 'PD1?', NTE*, AL1*, 'patient_visit?']
+  encoding: [RXE, timing_encoded+, RXR+, RXC*]
+  order_detail_supplement: [NTE+, RXR+, components*]
+  patient_visit: [PV1, 'PV2?']
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+  components: [RXC, NTE*]
+  order_detail: [RXO, 'order_detail_supplement?']
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'order_detail?', 'encoding?', administration+, CTI*]
+  administration: [RXA+, RXR, observation*]
+  timing_encoded: [TQ1, TQ2*]
+RSP_Q11:
+  mf_loc_dept: [LDP, LCH*, LCC*]
+  query_result_cluster: [MFE, LOC, LCH*, LRL*, mf_loc_dept+]
+  msg: [MSH, SFT*, MSA, ERR*, QAK, QPD, 'query_result_cluster?', 'DSC?']
+RPR_I03:
+  provider: [PRD, CTD*]
+  msg: [MSH, SFT*, MSA, provider+, PID*, NTE*]
+MDM_T02:
+  timing: [TQ1, TQ2*]
+  common_order: [ORC, timing*, OBR, NTE*]
+  obxnte_suppgrp: [OBX, NTE*]
+  msg: [MSH, SFT*, EVN, PID, PV1, common_order*, TXA, obxnte_suppgrp+]
+VQQ_Q07:
+  msg: [MSH, SFT*, VTQ, 'RDF?', 'DSC?']
+INU_U05:
+  msg: [MSH, SFT*, EQU, INV+, 'ROL?']
+MFN_M15:
+  mf_inv_item: [MFE, IIM]
+  msg: [MSH, SFT*, MFI, mf_inv_item+]
+RTB_Z74:
+  row_definition: [RDF, RDT*]
+  msg: [MSH, MSA, ERR*, SFT*, QAK, QPD, 'row_definition?', 'DSC?']
+QRY_PC4:
+  msg: [MSH, SFT*, QRD, 'QRF?']
+ADT_A43:
+  patient: [PID, 'PD1?', MRG]
+  msg: [MSH, SFT*, EVN, patient+]
+QBP_Q13:
+  msg: [MSH, SFT*, QPD, 'RDF?', RCP, 'DSC?']
+CSU_C09:
+  patient: [PID, 'PD1?', NTE*, 'visit?', CSR, study_phase+]
+  orcrxarxr_suppgrp: ['ORC?', rxarxr_suppgrp+]
+  timing_qty: [TQ1, TQ2*]
+  study_observation: ['ORC?', OBR, timing_qty*, OBX+]
+  msg: [MSH, SFT*, patient+]
+  study_schedule: ['CSS?', study_observation+, orcrxarxr_suppgrp+]
+  visit: [PV1, 'PV2?']
+  study_phase: ['CSP?', study_schedule+]
+  rxarxr_suppgrp: [RXA, RXR]
+MFN_M09:
+  mf_test_cat_detail: [OM3, OM4*]
+  mf_test_categorical: [MFE, OM1, 'mf_test_cat_detail?']
+  msg: [MSH, SFT*, MFI, mf_test_categorical+]
+ADT_A24:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', 'PV1?', DB1*, PID, 'PD1?', 'PV1?', DB1*]
+RSP_Z82:
+  patient: [PID, 'PD1?', NTE*, 'visit?']
+  encoded_order: [RXE, timing_encoded*, RXR+, RXC*]
+  query_response: ['patient?', common_order+]
+  treatment: [RXC+, NTE*]
+  observation: ['OBX?', NTE*]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, RCP, query_response+, 'DSC?']
+  visit: [AL1+, PV1, 'PV2?']
+  order_detail: [RXO, NTE*, RXR+, 'treatment?']
+  timing: [TQ1, TQ2*]
+  common_order: [ORC, timing*, 'order_detail?', 'encoded_order?', RXD, RXR+, RXC*, observation+]
+  timing_encoded: [TQ1, TQ2*]
+SQR_S25:
+  patient: [PID, 'PV1?', 'PV2?', 'DG1?']
+  service: [AIS, NTE*]
+  general_resource: [AIG, NTE*]
+  personnel_resource: [AIP, NTE*]
+  location_resource: [AIL, NTE*]
+  resources: [RGS, service*, general_resource*, personnel_resource*, location_resource*]
+  schedule: [SCH, TQ1*, NTE*, 'patient?', resources+]
+  msg: [MSH, MSA, ERR*, QAK, schedule*, 'DSC?']
+ORU_R01:
+  visit: [PV1, 'PV2?']
+  patient: [PID, 'PD1?', NTE*, NK1*, 'visit?']
+  timing_qty: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  specimen: [SPM, OBX*]
+  order_observation: ['ORC?', OBR, NTE*, timing_qty*, 'CTD?', observation*, FT1*, CTI*, specimen*]
+  patient_result: ['patient?', order_observation+]
+  msg: [MSH, SFT*, patient_result+, 'DSC?']
+OUL_R21:
+  patient: [PID, 'PD1?', NTE*]
+  visit: [PV1, 'PV2?']
+  container: [SAC, 'SID?']
+  timing_qty: [TQ1, TQ2*]
+  observation: ['OBX?', 'TCD?', SID*, NTE*]
+  order_observation: ['container?', 'ORC?', OBR, NTE*, timing_qty*, observation+, CTI*]
+  msg: [MSH, SFT*, 'NTE?', 'patient?', 'visit?', order_observation+, 'DSC?']
+RTB_Knn:
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, '?', '?', 'DSC?']
+QCN_J01:
+  msg: [MSH, SFT*, QID]
+UDM_Q05:
+  msg: [MSH, SFT*, URD, 'URS?', DSP+, 'DSC?']
+ADT_A18:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', MRG, PV1]
+ADT_A01:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', 'CON*', ROL*, NK1*, PV1, 'PV2?', ROL*, DB1*, OBX*, AL1*, DG1*, 'DRG?', procedure*, GT1*, insurance*, 'ACC?', 'UB1?', 'UB2?', 'PDA?']
+BAR_P01:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  visit: ['PV1?', 'PV2?', ROL*, DB1*, OBX*, AL1*, DG1*, 'DRG?', procedure*, GT1*, NK1*, insurance*, 'ACC?', 'UB1?', 'UB2?']
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, visit+]
+RSP_K23:
+  query_response: [PID]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, 'query_response?', 'DSC?']
+MFN_M08:
+  mf_test_numeric: [MFE, OM1, 'OM2?', 'OM3?', 'OM4?']
+  msg: [MSH, SFT*, MFI, mf_test_numeric+]
+RSP_Z86:
+  patient: [PID, 'PD1?', NTE*, AL1*]
+  encoded_order: [RXE, timing_encoded*, RXR+, RXC*]
+  query_response: ['patient?', common_order+]
+  observation: ['OBX?', NTE*]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, query_response+, 'DSC?']
+  order_detail: [RXO, RXR+, RXC*]
+  timing: [TQ1, TQ2*]
+  dispense: [RXD, RXR+, RXC*]
+  common_order: [ORC, timing*, 'order_detail?', 'encoded_order?', 'dispense?', 'give?', 'administration?', observation+]
+  administration: [RXA, RXR+, RXC*]
+  give: [RXG, RXR+, RXC*]
+  timing_encoded: [TQ1, TQ2*]
+VXX_V02:
+  patient: [PID, NK1*]
+  msg: [MSH, MSA, SFT*, QRD, 'QRF?', patient+]
+ADT_A21:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', PV1, 'PV2?', DB1*, OBX*]
+ADT_A39:
+  patient: [PID, 'PD1?', MRG, 'PV1?']
+  msg: [MSH, SFT*, EVN, patient+]
+SRR_S01:
+  patient: [PID, 'PV1?', 'PV2?', DG1*]
+  service: [AIS, NTE*]
+  general_resource: [AIG, NTE*]
+  location_resource: [AIL, NTE*]
+  personnel_resource: [AIP, NTE*]
+  resources: [RGS, service*, general_resource*, location_resource*, personnel_resource*]
+  schedule: [SCH, TQ1*, NTE*, patient*, resources+]
+  msg: [MSH, MSA, ERR*, 'schedule?']
+RRE_O12:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  timing_encoded: [TQ1, TQ2*]
+  encoding: [RXE, timing_encoded+, RXR+, RXC*]
+  order: [ORC, timing*, 'encoding?']
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+SUR_P09:
+  pshpdc_suppgrp: [PSH, PDC]
+  facpdcnte_suppgrp: [FAC, PDC, NTE]
+  facpshpdcpshfacpdcnteed_suppgrp: [FAC, pshpdc_suppgrp+, PSH, facpdcnte_suppgrp+, '']
+  msg: [MSH, facpshpdcpshfacpdcnteed_suppgrp+]
+RSP_K21:
+  query_response: [PID, 'PD1?', NK1*, QRI]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, 'query_response?', 'DSC?']
+OUL_R23:
+  pidpd1nte_suppgrp: [PID, 'PD1?', NTE*]
+  pv1pv2_suppgrp: [PV1, 'PV2?']
+  tq1tq2_suppgrp: [TQ1, TQ2*]
+  obxtcdsidnte_suppgrp: [OBX, 'TCD?', SID*, NTE*]
+  order: [OBR, 'ORC?', NTE*, tq1tq2_suppgrp*, obxtcdsidnte_suppgrp*, CTI*]
+  container: [SAC, 'INV?', order+]
+  spmobxsacinvobrorcntetq1tq2obxtcdsidntecti_suppgrp: [SPM, OBX*, container+]
+  msg: [MSH, SFT*, 'NTE?', 'pidpd1nte_suppgrp?', 'pv1pv2_suppgrp?', spmobxsacinvobrorcntetq1tq2obxtcdsidntecti_suppgrp+, 'DSC?']
+DSR_Q03:
+  msg: [MSH, SFT*, 'MSA?', 'ERR?', 'QAK?', QRD, 'QRF?', DSP+, 'DSC?']
+TCU_U10:
+  test_configuration: ['SPM?', TCC+]
+  msg: [MSH, SFT*, EQU, test_configuration+, 'ROL?']
+VXQ_V01:
+  msg: [MSH, SFT*, QRD, 'QRF?']
+ORD_O04:
+  patient: [PID, NTE*]
+  timing_diet: [TQ1, TQ2*]
+  order_diet: [ORC, timing_diet*, ODS*, NTE*]
+  timing_tray: [TQ1, TQ2*]
+  order_tray: [ORC, timing_tray*, ODT*, NTE*]
+  response: ['patient?', order_diet+, order_tray*]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+ADT_A38:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', PV1, 'PV2?', DB1*, OBX*, DG1*, 'DRG?']
+ADT_A17:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', PV1, 'PV2?', DB1*, OBX*, PID, 'PD1?', PV1, 'PV2?', DB1*, OBX*]
+SIU_S12:
+  patient: [PID, 'PD1?', 'PV1?', 'PV2?', OBX*, DG1*]
+  service: [AIS, NTE*]
+  general_resource: [AIG, NTE*]
+  location_resource: [AIL, NTE*]
+  personnel_resource: [AIP, NTE*]
+  resources: [RGS, service*, general_resource*, location_resource*, personnel_resource*]
+  msg: [MSH, SCH, TQ1*, NTE*, patient*, resources+]
+VXR_V03:
+  patient_visit: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  timing: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  order: [ORC, timing*, RXA, 'RXR?', observation*]
+  msg: [MSH, MSA, SFT*, QRD, 'QRF?', PID, 'PD1?', NK1*, 'patient_visit?', GT1*, insurance*, order*]
+QSB_Q16:
+  msg: [MSH, SFT*, QPD, RCP, 'DSC?']
+ADT_A12:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', PV1, 'PV2?', DB1*, OBX*, 'DG1?']
+REF_I12:
+  authorization_contact: [AUT, 'CTD?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  autctd_suppgrp2: [AUT, 'CTD?']
+  provider_contact: [PRD, CTD*]
+  results_notes: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  observation: [OBR, NTE*, results_notes*]
+  msg: [MSH, SFT*, 'RF1?', 'authorization_contact?', provider_contact+, PID, NK1*, GT1*, insurance*, 'ACC?', DG1*, DRG*, AL1*, procedure*, observation*, 'patient_visit?', NTE*]
+  procedure: [PR1, 'autctd_suppgrp2?']
+DOC_T12:
+  evnpidpv1txaobx_suppgrp: ['EVN?', PID, PV1, TXA, OBX*]
+  msg: [MSH, MSA, 'ERR?', 'QAK?', QRD, evnpidpv1txaobx_suppgrp+, 'DSC?']
+EDR_R07:
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, DSP+, 'DSC?']
+RQA_I08:
+  insurance: [IN1, 'IN2?', 'IN3?']
+  autctd_suppgrp2: [AUT, 'CTD?']
+  authorization: [AUT, 'CTD?']
+  observation: [OBR, NTE*, results*]
+  msg: [MSH, SFT*, 'RF1?', 'authorization?', provider+, PID, NK1*, 'guarantor_insurance?', 'ACC?', DG1*, DRG*, AL1*, procedure*, observation*, 'visit?', NTE*]
+  procedure: [PR1, 'autctd_suppgrp2?']
+  visit: [PV1, 'PV2?']
+  guarantor_insurance: [GT1*, insurance+]
+  provider: [PRD, CTD*]
+  results: [OBX, NTE*]
+ADT_A09:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', PV1, 'PV2?', DB1*, OBX*, DG1*]
+MFN_M02:
+  mf_staff: [MFE, STF, PRA*, ORG*, AFF*, LAN*, EDU*, CER*, NTE*]
+  msg: [MSH, SFT*, MFI, mf_staff+]
+SSU_U03:
+  specimen: [SPM, OBX*]
+  specimen_container: [SAC, OBX*, specimen*]
+  msg: [MSH, SFT*, EQU, specimen_container+, 'ROL?']
+PMU_B01:
+  msg: [MSH, SFT*, EVN, STF, PRA*, ORG*, AFF*, LAN*, EDU*, CER*]
+ORR_O02:
+  patient: [PID, NTE*]
+  obrrqdrq1rxoodsodt_suppgrp: ['OBR?', 'RQD?', 'RQ1?', 'RXO?', 'ODS?', 'ODT?']
+  order: [ORC, obrrqdrq1rxoodsodt_suppgrp, NTE*, CTI*]
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, NTE*, 'response?']
+OML_O33:
+  patient: [PID, 'PD1?', NTE*, NK1*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  observation_request: [OBR, 'TCD?', NTE*, DG1*, observation*, prior_result*]
+  order_prior: ['ORC?', OBR, NTE*, timing_prior*, observation_prior+]
+  observation_prior: [OBX, NTE*]
+  specimen: [SPM, OBX*, SAC*, order+]
+  timing_prior: [TQ1, TQ2*]
+  patient_visit: [PV1, 'PV2?']
+  patient_visit_prior: [PV1, 'PV2?']
+  observation: [OBX, 'TCD?', NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', specimen+]
+  prior_result: ['patient_prior?', 'patient_visit_prior?', AL1*, order_prior+]
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'observation_request?', FT1*, CTI*, 'BLG?']
+  patient_prior: [PID, 'PD1?']
+PMU_B04:
+  msg: [MSH, SFT*, EVN, STF, PRA*, ORG*]
+CRM_C01:
+  patient: [PID, 'PV1?', CSR, CSP*]
+  msg: [MSH, SFT*, patient+]
+ROR_ROR:
+  patient: [PID, NTE*]
+  order: [ORC, RXO, RXR+, RXC*]
+  definition: [QRD, 'QRF?', 'patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, definition+, 'DSC?']
+SPQ_Q08:
+  msg: [MSH, SFT*, SPR, 'RDF?', 'DSC?']
+ESU_U01:
+  msg: [MSH, SFT*, EQU, ISD*, 'ROL?']
+PRR_PC5:
+  patient: [PID, 'patient_visit?', problem+]
+  obranyhl7segment_suppgrp: ['OBR?', '?']
+  problem_observation: [OBX, NTE*]
+  goal_observation: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  problem_pathway: [PTH, VAR*]
+  goal: [GOL, NTE*, VAR*, goal_role*, goal_observation*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, patient+]
+  problem: [PRB, NTE*, VAR*, problem_role*, problem_pathway*, problem_observation*, goal*, order*]
+  goal_role: [ROL, VAR*]
+  order_detail: [obranyhl7segment_suppgrp, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+ADT_A52:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', PV1, 'PV2?']
+MFN_M05:
+  mf_loc_dept: [LDP, LCH*, LCC*]
+  mf_location: [MFE, LOC, LCH*, LRL*, mf_loc_dept+]
+  msg: [MSH, SFT*, MFI, mf_location+]
+MFN_M07:
+  mf_clin_study_sched: [MFE, CM0, CM2*]
+  msg: [MSH, SFT*, MFI, mf_clin_study_sched+]
+MFR_M06:
+  mf_query: [MFE, CM0, CM1*, CM2*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, 'QRF?', MFI, mf_query+, 'DSC?']
+ADT_A50:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', MRG, PV1]
+ADT_A15:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, PV1, 'PV2?', ROL*, DB1*, OBX*, DG1*]
+MFR_M07:
+  mf_query: [MFE, CM0, CM2*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, 'QRF?', MFI, mf_query+, 'DSC?']
+MFN_M16:
+  material_item_record: [MFE, ITM, NTE*, sterilization*, purchasing_vendor*, material_location*]
+  sterilization: [STZ, NTE*]
+  purchasing_vendor: [VND, packaging*]
+  packaging: [PKG, PCE*]
+  material_location: [IVT, ILT*, NTE*]
+  msg: [MSH, MFI, material_item_record+]
+OSQ_Q06:
+  msg: [MSH, SFT*, QRD, 'QRF?', 'DSC?']
+RPA_I08:
+  insurance: [IN1, 'IN2?', 'IN3?']
+  autctd_suppgrp2: [AUT, 'CTD?']
+  authorization: [AUT, 'CTD?']
+  observation: [OBR, NTE*, results*]
+  msg: [MSH, SFT*, MSA, 'RF1?', 'authorization?', provider+, PID, NK1*, GT1*, insurance*, 'ACC?', DG1*, DRG*, AL1*, procedure+, observation*, 'visit?', NTE*]
+  procedure: [PR1, 'autctd_suppgrp2?']
+  visit: [PV1, 'PV2?']
+  provider: [PRD, CTD*]
+  results: [OBX, NTE*]
+QBP_Z73:
+  msg: [MSH, SFT*, QPD, RCP]
+OMB_O27:
+  patient_visit: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  timing: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  order: [ORC, timing*, BPO, 'SPM?', NTE*, DG1*, observation*, FT1*, 'BLG?']
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+QCK_Q02:
+  msg: [MSH, SFT*, MSA, 'ERR?', 'QAK?']
+MDM_T01:
+  timing: [TQ1, TQ2*]
+  common_order: [ORC, timing*, OBR, NTE*]
+  msg: [MSH, SFT*, EVN, PID, PV1, common_order*, TXA]
+PTR_PCF:
+  patient: [PID, 'patient_visit?', pathway+]
+  pathway_role: [ROL, VAR*]
+  problem_observation: [OBX, NTE*]
+  goal_observation: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  goal: [GOL, NTE*, VAR*, goal_role*, goal_observation*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, patient+]
+  problem: [PRB, NTE*, VAR*, problem_role*, problem_observation*, goal*, order*]
+  obr_suppgrp: ['OBR?']
+  goal_role: [ROL, VAR*]
+  pathway: [PTH, NTE*, VAR*, pathway_role*, problem*]
+  order_detail: [obr_suppgrp, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+ORS_O06:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, RQD, 'RQ1?', NTE*]
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+RDS_O13:
+  patient: [PID, 'PD1?', NTE*, AL1*, 'patient_visit?']
+  encoding: [RXE, NTE*, timing_encoded+, RXR+, RXC*]
+  order_detail_supplement: [NTE+, RXR+, component*]
+  patient_visit: [PV1, 'PV2?']
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+  component: [RXC, NTE*]
+  order_detail: [RXO, 'order_detail_supplement?']
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'order_detail?', 'encoding?', RXD, NTE*, RXR+, RXC*, observation*, FT1*]
+  timing_encoded: [TQ1, TQ2*]
+PMU_B07:
+  certificate: [CER, ROL*]
+  msg: [MSH, SFT*, EVN, STF, 'PRA?', certificate*]
+RQP_I04:
+  provider: [PRD, CTD*]
+  msg: [MSH, SFT*, provider+, PID, NK1*, GT1*, NTE*]
+OMS_O05:
+  patient_visit: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  timing: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  order: [ORC, timing*, RQD, 'RQ1?', NTE*, observation*, 'BLG?']
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+ORG_O20:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  specimen: [SPM, SAC*]
+  order: [ORC, timing*, 'OBR?', NTE*, CTI*, specimen*]
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+RCI_I05:
+  provider: [PRD, CTD*]
+  results: [OBX, NTE*]
+  observation: [OBR, NTE*, results*]
+  msg: [MSH, SFT*, MSA, QRD, 'QRF?', provider+, PID, DG1*, DRG*, AL1*, observation*, NTE*]
+MFQ_M01:
+  msg: [MSH, SFT*, QRD, 'QRF?', 'DSC?']
+BRP_O30:
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'BPO?', BPX*]
+  patient: [PID, order*]
+  response: ['patient?']
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+BAR_P02:
+  patient: [PID, 'PD1?', 'PV1?', DB1*]
+  msg: [MSH, SFT*, EVN, patient+]
+PMU_B03:
+  msg: [MSH, SFT*, EVN, STF]
+RQQ_Q09:
+  msg: [MSH, SFT*, ERQ, 'DSC?']
+PPR_PC1:
+  problem_observation: [OBX, NTE*]
+  goal_observation: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  goal: [GOL, NTE*, VAR*, goal_role*, goal_observation*]
+  msg: [MSH, SFT*, PID, 'patient_visit?', problem+]
+  problem: [PRB, NTE*, VAR*, problem_role*, pathway*, problem_observation*, goal*, order*]
+  obr_suppgrp: ['OBR?']
+  goal_role: [ROL, VAR*]
+  pathway: [PTH, VAR*]
+  order_detail: [obr_suppgrp, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+MFR_M01:
+  mf_query: [MFE, '']
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, 'QRF?', MFI, mf_query+, 'DSC?']
+BAR_P12:
+  procedure: [PR1, ROL*]
+  msg: [MSH, SFT*, EVN, PID, PV1, DG1*, 'DRG?', procedure*]
+LSU_U12:
+  msg: [MSH, SFT*, EQU, EQP+, 'ROL?']
+ORU_R30:
+  visit: [PV1, 'PV2?']
+  timing_qty: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, PID, 'PD1?', 'visit?', ORC, OBR, NTE*, timing_qty*, observation+]
+BAR_P06:
+  patient: [PID, 'PV1?']
+  msg: [MSH, SFT*, EVN, patient+]
+RRA_O18:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  administration: [RXA+, RXR]
+  order: [ORC, timing*, 'administration?']
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+RDR_RDR:
+  patient: [PID, NTE*]
+  encoding: [RXE, RXR+, RXC*]
+  dispense: [RXD, RXR+, RXC*]
+  order: [ORC, 'encoding?', dispense+]
+  definition: [QRD, 'QRF?', 'patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, definition+, 'DSC?']
+MFN_M10:
+  mf_test_batt_detail: [OM5, OM4*]
+  mf_test_batteries: [MFE, OM1, 'mf_test_batt_detail?']
+  msg: [MSH, SFT*, MFI, mf_test_batteries+]
+RRI_I12:
+  authorization_contact: [AUT, 'CTD?']
+  provider_contact: [PRD, CTD*]
+  autctd_suppgrp2: [AUT, 'CTD?']
+  procedure: [PR1, 'autctd_suppgrp2?']
+  results_notes: [OBX, NTE*]
+  observation: [OBR, NTE*, results_notes*]
+  patient_visit: [PV1, 'PV2?']
+  msg: [MSH, SFT*, 'MSA?', 'RF1?', 'authorization_contact?', provider_contact+, PID, 'ACC?', DG1*, DRG*, AL1*, procedure*, observation*, 'patient_visit?', NTE*]
+QBP_Q15:
+  msg: [MSH, SFT*, QPD, RCP, 'DSC?']
+PPT_PCL:
+  patient: [PID, 'patient_visit?', pathway+]
+  pathway_role: [ROL, VAR*]
+  problem_observation: [OBX, NTE*]
+  goal_observation: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  goal: [GOL, NTE*, VAR*, goal_role*, goal_observation*, problem*, order*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, patient+]
+  problem: [PRB, NTE*, VAR*, problem_role*, problem_observation*]
+  obr_suppgrp: ['OBR?']
+  goal_role: [ROL, VAR*]
+  pathway: [PTH, NTE*, VAR*, pathway_role*, goal*]
+  order_detail: [obr_suppgrp, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+ORB_O28:
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'BPO?']
+  patient: [PID, order*]
+  response: ['patient?']
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+SQM_S25:
+  service: [AIS, 'APR?']
+  general_resource: [AIG, 'APR?']
+  personnel_resource: [AIP, 'APR?']
+  location_resource: [AIL, 'APR?']
+  resources: [RGS, service*, general_resource*, personnel_resource*, location_resource*]
+  request: [ARQ, 'APR?', 'PID?', resources+]
+  msg: [MSH, QRD, 'QRF?', 'request?', 'DSC?']
+RGR_RGR:
+  patient: [PID, NTE*]
+  encoding: [RXE, RXR+, RXC*]
+  order: [ORC, 'encoding?', RXG+, RXR+, RXC*]
+  definition: [QRD, 'QRF?', 'patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, definition+, 'DSC?']
+ORN_O08:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, RQD, 'RQ1?', NTE*]
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+QRY:
+  msg: [MSH, QRD, 'QRF?']
+MFN_M01:
+  mf: [MFE, '?']
+  msg: [MSH, SFT*, MFI, mf+]
+PMU_B08:
+  msg: [MSH, SFT*, EVN, STF, 'PRA?', CER*]
+BTS_O31:
+  patient_visit: [PV1, 'PV2?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?']
+  timing: [TQ1, TQ2*]
+  product_status: [BTX, NTE*]
+  order: [ORC, timing*, BPO, NTE*, product_status*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+ADT_A20:
+  msg: [MSH, SFT*, EVN, NPU]
+PEX_P07:
+  study: [CSR, CSP*]
+  pex_observation: [PEO, pex_cause+]
+  timing_qty: [TQ1, TQ2*]
+  experience: [PES, pex_observation+]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', NTE*, 'visit?', experience+]
+  rx_administration: [RXA, 'RXR?']
+  associated_rx_order: [RXE, nk1_timing_qty+, RXR*]
+  visit: [PV1, 'PV2?']
+  associated_rx_admin: [RXA, 'RXR?']
+  rx_order: [RXE, timing_qty+, RXR*]
+  associated_person: [NK1, 'associated_rx_order?', associated_rx_admin*, PRB*, OBX*]
+  pex_cause: [PCR, 'rx_order?', rx_administration*, PRB*, OBX*, NTE*, 'associated_person?', study*]
+  nk1_timing_qty: [TQ1, TQ2*]
+RCL_I06:
+  provider: [PRD, CTD*]
+  msg: [MSH, SFT*, MSA, QRD, 'QRF?', provider+, PID, DG1*, DRG*, AL1*, NTE*, DSP*, 'DSC?']
+PPV_PCA:
+  patient: [PID, 'patient_visit?', goal+]
+  problem_observation: [OBX, NTE*]
+  goal_observation: [OBX, NTE*]
+  goal_pathway: [PTH, VAR*]
+  patient_visit: [PV1, 'PV2?']
+  goal: [GOL, NTE*, VAR*, goal_role*, goal_pathway*, goal_observation*, problem*, order*]
+  order_choice: ['OBR?', '?']
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, patient+]
+  problem: [PRB, NTE*, VAR*, problem_role*, problem_observation*]
+  goal_role: [ROL, VAR*]
+  order_detail: [order_choice, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+MFN_M06:
+  mf_phase_sched_detail: [CM1, CM2*]
+  mf_clin_study: [MFE, CM0, mf_phase_sched_detail*]
+  msg: [MSH, SFT*, MFI, mf_clin_study+]
+EAN_U09:
+  notification: [NDS, 'NTE?']
+  msg: [MSH, SFT*, EQU, notification+, 'ROL?']
+MFN_M13:
+  msg: [MSH, SFT*, MFI, MFE+]
+ORI_O24:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, OBR, NTE*, IPC+]
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+RPL_I02:
+  provider: [PRD, CTD*]
+  msg: [MSH, SFT*, MSA, provider+, NTE*, DSP*, 'DSC?']
+SRM_S01:
+  patient: [PID, 'PV1?', 'PV2?', OBX*, DG1*]
+  service: [AIS, 'APR?', NTE*]
+  general_resource: [AIG, 'APR?', NTE*]
+  location_resource: [AIL, 'APR?', NTE*]
+  personnel_resource: [AIP, 'APR?', NTE*]
+  resources: [RGS, service*, general_resource*, location_resource*, personnel_resource*]
+  msg: [MSH, ARQ, 'APR?', NTE*, patient*, resources+]
+MFN_M12:
+  mf_obs_attributes: [MFE, OM1, 'OM7?']
+  msg: [MSH, SFT*, MFI, mf_obs_attributes+]
+OML_O35:
+  patient: [PID, 'PD1?', NTE*, NK1*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  observation_request: [OBR, 'TCD?', NTE*, DG1*, observation*, prior_result*]
+  order_prior: ['ORC?', OBR, NTE*, timing_prior*, observation_prior+]
+  observation_prior: [OBX, NTE*]
+  specimen: [SPM, OBX*, specimen_container+]
+  timing_prior: [TQ1, TQ2*]
+  patient_visit: [PV1, 'PV2?']
+  patient_visit_prior: [PV1, 'PV2?']
+  observation: [OBX, 'TCD?', NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', specimen+]
+  prior_result: ['patient_prior?', 'patient_visit_prior?', AL1*, order_prior+]
+  specimen_container: [SAC, order+]
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'observation_request?', FT1*, CTI*, 'BLG?']
+  patient_prior: [PID, 'PD1?']
+ORM_O01:
+  patient_visit: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  obrrqdrq1rxoodsodt_suppgrp: ['OBR?', 'RQD?', 'RQ1?', 'RXO?', 'ODS?', 'ODT?']
+  observation: [OBX, NTE*]
+  order_detail: [obrrqdrq1rxoodsodt_suppgrp, NTE*, 'CTD?', DG1*, observation*]
+  order: [ORC, 'order_detail?', FT1*, CTI*, 'BLG?']
+  msg: [MSH, NTE*, 'patient?', order+]
+NMQ_N01:
+  qry_with_detail: [QRD, 'QRF?']
+  clock_and_statistics: ['NCK?', 'NST?', 'NSC?']
+  msg: [MSH, SFT*, 'qry_with_detail?', clock_and_statistics+]
+BAR_P05:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  visit: ['PV1?', 'PV2?', ROL*, DB1*, OBX*, AL1*, DG1*, 'DRG?', procedure*, GT1*, NK1*, insurance*, 'ACC?', 'UB1?', 'UB2?', 'ABS?', BLC*, 'RMI?']
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, visit+]
+ADT_A61:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', PV1, ROL*, 'PV2?']
+QVR_Q17:
+  qbp: ['']
+  msg: [MSH, SFT*, QPD, 'qbp?', RCP, 'DSC?']
+OMN_O07:
+  patient_visit: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  timing: [TQ1, TQ2*]
+  observation: [OBX, NTE*]
+  order: [ORC, timing*, RQD, 'RQ1?', NTE*, observation*, 'BLG?']
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+RTB_K13:
+  row_definition: [RDF, RDT*]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, 'row_definition?', 'DSC?']
+RSP_K25:
+  staff: [STF, PRA*, ORG*, AFF*, LAN*, EDU*, CER*]
+  msg: [MSH, SFT*, MSA, ERR*, QAK, QPD, RCP, staff+, 'DSC?']
+ADT_A60:
+  msg: [MSH, SFT*, EVN, PID, 'PV1?', 'PV2?', IAM*]
+TBR_R08:
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, RDF, RDT+, 'DSC?']
+ADT_A30:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', MRG]
+ORL_O36:
+  timing: [TQ1, TQ2*]
+  observation_request: [OBR]
+  order: [ORC, timing*, 'observation_request?']
+  specimen_container: [SAC, order*]
+  specimen: [SPM, OBX*, specimen_container+]
+  patient: [PID, specimen+]
+  response: ['patient?']
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+RSP_Z90:
+  visit: [PV1, 'PV2?']
+  patient: [PID, 'PD1?', NK1*, NTE*, 'visit?']
+  timing: [TQ1, TQ2*]
+  observation: ['OBX?', NTE*]
+  common_order: [ORC, timing*, OBR, NTE*, 'CTD?', observation+]
+  specimen: [SPM, OBX*]
+  query_response: ['patient?', common_order+, specimen*]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, RCP, query_response+, DSC]
+RGV_O15:
+  patient: [PID, NTE*, AL1*, 'patient_visit?']
+  encoding: [RXE, timing_encoded+, RXR+, RXC*]
+  timing_give: [TQ1, TQ2*]
+  order_detail_supplement: [NTE+, RXR+, components*]
+  patient_visit: [PV1, 'PV2?']
+  observation: ['OBX?', NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+  components: [RXC, NTE*]
+  order_detail: [RXO, 'order_detail_supplement?']
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'order_detail?', 'encoding?', give+]
+  give: [RXG, timing_give+, RXR+, RXC*, observation+]
+  timing_encoded: [TQ1, TQ2*]
+OSR_Q06:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  obrrqdrq1rxoodsodt_suppgrp: ['OBR?', 'RQD?', 'RQ1?', 'RXO?', 'ODS?', 'ODT?']
+  order: [ORC, timing*, obrrqdrq1rxoodsodt_suppgrp, NTE*, CTI*]
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, QRD, 'QRF?', 'response?', 'DSC?']
+OMG_O19:
+  patient: [PID, 'PD1?', NTE*, NK1*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  order_prior: ['ORC?', OBR, timing_prior*, NTE*, 'CTD?', observation_prior+]
+  observation_prior: [OBX, NTE*]
+  specimen: [SPM, OBX*, container*]
+  timing_prior: [TQ1, TQ2*]
+  patient_visit: [PV1, 'PV2?']
+  patient_visit_prior: [PV1, 'PV2?']
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+  prior_result: ['patient_prior?', 'patient_visit_prior?', AL1*, order_prior+]
+  timing: [TQ1, TQ2*]
+  container: [SAC, OBX*]
+  order: [ORC, timing*, OBR, NTE*, 'CTD?', DG1*, observation*, specimen*, prior_result*, FT1*, CTI*, 'BLG?']
+  patient_prior: [PID, 'PD1?']
+ADT_A37:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', 'PV1?', DB1*, PID, 'PD1?', 'PV1?', DB1*]
+QRY_A19:
+  msg: [MSH, SFT*, QRD, 'QRF?']
+ERP_R09:
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, ERQ, 'DSC?']
+RQC_I05:
+  provider: [PRD, CTD*]
+  msg: [MSH, SFT*, QRD, 'QRF?', provider+, PID, NK1*, GT1*, NTE*]
+idx:
+  DOC: {T12: DOC_T12}
+  RRE: {O12: RRE_O12, O26: RRE_O12}
+  SSR: {U04: SSR_U04}
+  RQA: {I08: RQA_I08, I09: RQA_I08, I10: RQA_I08, I11: RQA_I08}
+  SSU: {U03: SSU_U03}
+  TCU: {U10: TCU_U10, U11: TCU_U10}
+  INU: {U05: INU_U05}
+  MFN: {M05: MFN_M05, M04: MFN_M04, M13: MFN_M13, M16: MFN_M16, M03: MFN_M03, M01: MFN_M01, M02: MFN_M02, M06: MFN_M06, M15: MFN_M15, M10: MFN_M10, M08: MFN_M08, M09: MFN_M09, M12: MFN_M12, M11: MFN_M11, M07: MFN_M07}
+  EAR: {U08: EAR_U08}
+  LSU: {U12: LSU_U12, U13: LSU_U13}
+  SUR: {P09: SUR_P09}
+  RQI: {I01: RQI_I01, I02: RQI_I01, I03: RQI_I01, I07: RQI_I01}
+  SRR: {S10: SRR_S01, S06: SRR_S01, S08: SRR_S01, S07: SRR_S01, S01: SRR_S01, S03: SRR_S01, S11: SRR_S01, S04: SRR_S01, S09: SRR_S01, S02: SRR_S01, S05: SRR_S01}
+  OML: {O21: OML_O21, O33: OML_O33, O35: OML_O35}
+  PEX: {P07: PEX_P07, P08: PEX_P07}
+  OMB: {O27: OMB_O27}
+  DFT: {P03: DFT_P03, P11: DFT_P11}
+  ORD: {O04: ORD_O04}
+  RDY: {K15: RDY_K15}
+  RPL: {I02: RPL_I02}
+  VQQ: {Q07: VQQ_Q07}
+  RPA: {I08: RPA_I08, I09: RPA_I08, I10: RPA_I08, I11: RPA_I08}
+  NMQ: {N01: NMQ_N01}
+  MDM: {T05: MDM_T01, T06: MDM_T02, T08: MDM_T02, T02: MDM_T02, T07: MDM_T01, T01: MDM_T01, T03: MDM_T01, T11: MDM_T01, T10: MDM_T02, T04: MDM_T02, T09: MDM_T01}
+  RCL: {I06: RCL_I06}
+  SQR: {S25: SQR_S25}
+  EDR: {R07: EDR_R07}
+  BRT: {O32: BRT_O32}
+  ADR: {A19: ADR_A19}
+  MFD: {MFA: MFD_MFA}
+  OSQ: {Q06: OSQ_Q06}
+  PPP: {PCB: PPP_PCB, PCD: PPP_PCB}
+  ORP: {O10: ORP_O10}
+  RRA: {O18: RRA_O18}
+  QSB: {Q16: QSB_Q16}
+  REF: {I12: REF_I12, I13: REF_I12, I14: REF_I12, I15: REF_I12}
+  RQP: {I04: RQP_I04}
+  VXU: {V04: VXU_V04}
+  CRM: {C01: CRM_C01, C02: CRM_C01, C03: CRM_C01, C04: CRM_C01, C05: CRM_C01, C06: CRM_C01, C07: CRM_C01, C08: CRM_C01}
+  QBP: {Q11: QBP_Q11, Q13: QBP_Q13, Q15: QBP_Q15, Q21: QBP_Q21, Q22: QBP_Q21, Q23: QBP_Q21, Q24: QBP_Q21, Q25: QBP_Q21}
+  OMG: {O19: OMG_O19}
+  RDE: {O11: RDE_O11, O25: RDE_O11}
+  ESR: {U02: ESR_U02}
+  OMP: {O09: OMP_O09}
+  BPS: {O29: BPS_O29}
+  QRF: {W02: QRF_W02}
+  ORB: {O28: ORB_O28}
+  OUL: {R21: OUL_R21, R22: OUL_R22, R23: OUL_R23, R24: OUL_R24}
+  RRG: {O16: RRG_O16}
+  ORF: {R04: ORF_R04}
+  TBR: {R08: TBR_R08, R09: TBR_R09}
+  EAC: {U07: EAC_U07}
+  EQQ: {Q04: EQQ_Q04}
+  INR: {U06: INR_U06}
+  ORI: {O24: ORI_O24}
+  RQC: {I05: RQC_I05, I06: RQC_I05}
+  RQQ: {Q09: RQQ_Q09}
+  RAS: {O17: RAS_O17}
+  EAN: {U09: EAN_U09}
+  RGV: {O15: RGV_O15}
+  ORR: {O02: ORR_O02}
+  SIU: {S24: SIU_S12, S18: SIU_S12, S13: SIU_S12, S26: SIU_S12, S14: SIU_S12, S20: SIU_S12, S19: SIU_S12, S23: SIU_S12, S17: SIU_S12, S15: SIU_S12, S21: SIU_S12, S22: SIU_S12, S12: SIU_S12, S16: SIU_S12}
+  RPI: {I01: RPI_I01, I04: RPI_I04}
+  RSP: {Q11: RSP_Q11}
+  ORN: {O08: ORN_O08}
+  VXR: {V03: VXR_V03}
+  RAR: {RAR: RAR_RAR}
+  VXX: {V02: VXX_V02}
+  BAR: {P01: BAR_P01, P02: BAR_P02, P05: BAR_P05, P06: BAR_P06, P10: BAR_P10, P12: BAR_P12}
+  NMR: {N01: NMR_N01, N02: NMD_N02}
+  ESU: {U01: ESU_U01}
+  UDM: {Q05: UDM_Q05}
+  DSR: {P04: DSR_P04, Q01: DSR_Q01, Q03: DSR_Q03}
+  QRY: {Q27: QRY_Q01, PCE: QRY_PC4, T12: QRY_T12, Q29: QRY_Q01, Q26: QRY_Q01, Q28: QRY_Q01, PCK: QRY_PC4, Q02: QRY_Q02, PC9: QRY_PC4, PC4: QRY_PC4, P04: QRY_P04, A19: QRY_A19, R02: QRY_R02, Q01: QRY_Q01, Q30: QRY_Q01}
+  PGL: {PC6: PGL_PC6, PC8: PGL_PC6}
+  QCK: {Q02: QCK_Q02}
+  PMU: {B01: PMU_B01, B02: PMU_B01, B03: PMU_B03, B04: PMU_B04, B05: PMU_B04, B06: PMU_B04, B07: PMU_B07, B08: PMU_B08}
+  CSU: {C09: CSU_C09, C10: CSU_C09, C11: CSU_C09, C12: CSU_C09}
+  OSR: {Q06: OSR_Q06}
+  RTB: {K13: RTB_K13}
+  PPV: {PCA: PPV_PCA}
+  BRP: {O30: BRP_O30}
+  RRI: {I12: RRI_I12, I13: RRI_I12, I14: RRI_I12, I15: RRI_I12}
+  ERP: {R09: ERP_R09}
+  RCI: {I05: RCI_I05}
+  PPT: {PCL: PPT_PCL}
+  ORL: {O22: ORL_O22, O34: ORL_O34, O36: ORL_O36}
+  SRM: {S10: SRM_S01, S06: SRM_S01, S08: SRM_S01, S07: SRM_S01, S01: SRM_S01, S03: SRM_S01, S11: SRM_S01, S04: SRM_S01, S09: SRM_S01, S02: SRM_S01, S05: SRM_S01}
+  RRD: {O14: RRD_O14}
+  MFR: {M01: MFR_M01, M02: MFR_M01, M03: MFR_M01, M04: MFR_M04, M05: MFR_M05, M06: MFR_M06, M07: MFR_M07}
+  MFQ: {M01: MFQ_M01, M02: MFQ_M01, M03: MFQ_M01, M04: MFQ_M01, M05: MFQ_M01, M06: MFQ_M01}
+  RDR: {RDR: RDR_RDR}
+  OMI: {O23: OMI_O23}
+  BTS: {O31: BTS_O31}
+  SQM: {S25: SQM_S25}
+  ORM: {O01: ORM_O01, O03: OMD_O03}
+  PTR: {PCF: PTR_PCF}
+  ORS: {O06: ORS_O06}
+  RPR: {I03: RPR_I03}
+  VXQ: {V01: VXQ_V01}
+  ORU: {R01: ORU_R01, R03: ORU_R01, R30: ORU_R30, R31: ORU_R30, R32: ORU_R30, W01: ORU_W01}
+  SPQ: {Q08: SPQ_Q08}
+  RGR: {RGR: RGR_RGR}
+  OMN: {O07: OMN_O07}
+  ADT: {A38: ADT_A38, A22: ADT_A21, A15: ADT_A15, A28: ADT_A05, A16: ADT_A16, A43: ADT_A43, A35: ADT_A30, A34: ADT_A30, A37: ADT_A37, A09: ADT_A09, A39: ADT_A39, A29: ADT_A21, A03: ADT_A03, A30: ADT_A30, A24: ADT_A24, A20: ADT_A20, A61: ADT_A61, A36: ADT_A30, A53: ADT_A52, A13: ADT_A01, A02: ADT_A02, A50: ADT_A50, A32: ADT_A21, A01: ADT_A01, A48: ADT_A30, A08: ADT_A01, A40: ADT_A39, A07: ADT_A06, A41: ADT_A39, A11: ADT_A09, A60: ADT_A60, A33: ADT_A21, A42: ADT_A39, A26: ADT_A21, A12: ADT_A12, A04: ADT_A01, A45: ADT_A45, A31: ADT_A05, A55: ADT_A52, A27: ADT_A21, A52: ADT_A52, A51: ADT_A50, A10: ADT_A09, A46: ADT_A30, A62: ADT_A61, A21: ADT_A21, A23: ADT_A21, A47: ADT_A30, A06: ADT_A06, A25: ADT_A21, A49: ADT_A30, A14: ADT_A05, A44: ADT_A43, A05: ADT_A05, A18: ADT_A18, A54: ADT_A54, A17: ADT_A17}
+  ACK: {ACK: ACK}
+  PPG: {PCC: PPG_PCG, PCG: PPG_PCG, PCH: PPG_PCG, PCJ: PPG_PCG}
+  RDS: {O13: RDS_O13}
+  QCN: {J01: QCN_J01, J02: QCN_J01}
+  OMS: {O05: OMS_O05}
+  QVR: {Q17: QVR_Q17}
+  RER: {RER: RER_RER}
+  ROR: {ROR: ROR_ROR}
+  ORG: {O20: ORG_O20}
+  PPR: {PC1: PPR_PC1, PC2: PPR_PC1, PC3: PPR_PC1, PC5: PRR_PC5}
+  MFK: {M05: MFK_M01, M04: MFK_M01, M03: MFK_M01, M01: MFK_M01, M02: MFK_M01, M06: MFK_M01, M10: MFK_M01, M08: MFK_M01, M09: MFK_M01, M11: MFK_M01, M07: MFK_M01}
+ADT_A54:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, PV1, 'PV2?', ROL*]
+EAC_U07:
+  specimen_container: [SAC, SPM*]
+  command: [ECD, 'TQ1?', 'specimen_container?', 'CNS?']
+  msg: [MSH, SFT*, EQU, command+, 'ROL?']
+MFN_M03:
+  mf_test: [MFE, OM1, '']
+  msg: [MSH, SFT*, MFI, mf_test+]
+RSP_K31:
+  response: ['patient?', order+]
+  patient: [PID, 'PD1?', NTE*, AL1*, 'patient_visit?']
+  encoding: [RXE, timing_encoded+, RXR+, RXC*]
+  patient_visit: [PV1, 'PV2?']
+  observation: ['OBX?', NTE*]
+  msg: [MSH, MSA, ERR*, SFT*, QAK, QPD, RCP, response+, 'DSC?']
+  components: [RXC, NTE*]
+  order_detail: [RXO, NTE*, RXR+, components*]
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'order_detail?', 'encoding?', RXD, RXR+, RXC*, observation+]
+  timing_encoded: [TQ1, TQ2*]
+SSR_U04:
+  specimen_container: [SAC, SPM*]
+  msg: [MSH, SFT*, EQU, specimen_container+, 'ROL?']
+BRT_O32:
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'BPO?', BTX*]
+  response: ['PID?', order*]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+OML_O21:
+  patient: [PID, 'PD1?', NTE*, NK1*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  observation_request: [OBR, 'TCD?', NTE*, 'CTD?', DG1*, observation*, specimen*, prior_result*]
+  order_prior: ['ORC?', OBR, NTE*, timing_prior*, observation_prior+]
+  observation_prior: [OBX, NTE*]
+  specimen: [SPM, OBX*, container*]
+  timing_prior: [TQ1, TQ2*]
+  patient_visit: [PV1, 'PV2?']
+  patient_visit_prior: [PV1, 'PV2?']
+  observation: [OBX, 'TCD?', NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+  prior_result: ['patient_prior?', 'patient_visit_prior?', AL1*, order_prior+]
+  timing: [TQ1, TQ2*]
+  container: [SAC, OBX*]
+  order: [ORC, timing*, 'observation_request?', FT1*, CTI*, 'BLG?']
+  patient_prior: [PID, 'PD1?']
+RRD_O14:
+  patient: [PID, NTE*]
+  timing: [TQ1, TQ2*]
+  dispense: [RXD, NTE*, RXR+, RXC*]
+  order: [ORC, timing*, 'dispense?']
+  response: ['patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+DSR_Q01:
+  msg: [MSH, SFT*, MSA, 'ERR?', 'QAK?', QRD, 'QRF?', DSP+, 'DSC?']
+OMP_O09:
+  patient_visit: [PV1, 'PV2?']
+  insurance: [IN1, 'IN2?', 'IN3?']
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  timing: [TQ1, TQ2*]
+  component: [RXC, NTE*]
+  observation: [OBX, NTE*]
+  order: [ORC, timing*, RXO, NTE*, RXR+, component*, observation*, FT1*, 'BLG?']
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+ADT_A02:
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, PV1, 'PV2?', ROL*, DB1*, OBX*, 'PDA?']
+ADT_A16:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, NK1*, PV1, 'PV2?', ROL*, DB1*, OBX*, AL1*, DG1*, 'DRG?', procedure*, GT1*, insurance*, 'ACC?']
+OUL_R22:
+  patient: [PID, 'PD1?', NTE*]
+  visit: [PV1, 'PV2?']
+  container: [SAC, 'INV?']
+  timing_qty: [TQ1, TQ2*]
+  obxtcdsidnte_suppgrp: [OBX, 'TCD?', SID*, NTE*]
+  order: [OBR, 'ORC?', NTE*, timing_qty*, obxtcdsidnte_suppgrp*, CTI*]
+  specimen: [SPM, OBX*, container*, order+]
+  msg: [MSH, SFT*, 'NTE?', 'patient?', 'visit?', specimen+, 'DSC?']
+EAR_U08:
+  specimen_container: [SAC, SPM*]
+  command_response: [ECD, 'specimen_container?', ECR]
+  msg: [MSH, SFT*, EQU, command_response+, 'ROL?']
+MFK_M01:
+  msg: [MSH, SFT*, MSA, ERR*, MFI, MFA*]
+MFN_M11:
+  mf_test_calc_detail: [OM6, OM2]
+  mf_test_calculated: [MFE, OM1, 'mf_test_calc_detail?']
+  msg: [MSH, SFT*, MFI, mf_test_calculated+]
+ORL_O34:
+  timing: [TQ1, TQ2*]
+  spmsac_suppgrp2: [SPM, SAC*]
+  observation_request: [OBR, spmsac_suppgrp2*]
+  order: [ORC, timing*, 'observation_request?']
+  specimen: [SPM, OBX*, SAC*, order*]
+  patient: [PID, specimen+]
+  response: ['patient?']
+  msg: [MSH, MSA, ERR*, SFT*, NTE*, 'response?']
+RDE_O11:
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  patient_visit: [PV1, 'PV2?']
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order+]
+  component: [RXC, NTE*]
+  order_detail: [RXO, NTE*, RXR+, component*]
+  timing: [TQ1, TQ2*]
+  order: [ORC, timing*, 'order_detail?', RXE, NTE*, timing_encoded+, RXR+, RXC*, observation*, FT1*, 'BLG?', CTI*]
+  timing_encoded: [TQ1, TQ2*]
+RPI_I01:
+  provider: [PRD, CTD*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  guarantor_insurance: [GT1*, insurance+]
+  msg: [MSH, SFT*, MSA, provider+, PID, NK1*, 'guarantor_insurance?', NTE*]
+PGL_PC6:
+  problem_observation: [OBX, NTE*]
+  patient_visit: [PV1, 'PV2?']
+  goal: [GOL, NTE*, VAR*, goal_role*, pathway*, observation*, problem*, order*]
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, PID, 'patient_visit?', goal+]
+  problem: [PRB, NTE*, VAR*, problem_role*, problem_observation*]
+  obr_suppgrp: ['OBR?']
+  goal_role: [ROL, VAR*]
+  pathway: [PTH, VAR*]
+  order_detail: [obr_suppgrp, NTE*, VAR*, order_observation*]
+  order: [ORC, 'order_detail?']
+  order_observation: [OBX, NTE*, VAR*]
+  problem_role: [ROL, VAR*]
+ACK:
+  msg: [MSH, SFT*, MSA, ERR*]
+ADT_A05:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', ROL*, NK1*, PV1, 'PV2?', ROL*, DB1*, OBX*, AL1*, DG1*, 'DRG?', procedure*, GT1*, insurance*, 'ACC?', 'UB1?', 'UB2?']
+RSP_Z88:
+  patient: [PID, 'PD1?', NTE*, 'allergy?']
+  query_response: ['patient?', common_order+]
+  observation: ['OBX?', NTE*]
+  msg: [MSH, SFT*, MSA, 'ERR?', QAK, QPD, RCP, query_response+, DSC]
+  component: [RXC+, NTE*]
+  visit: [PV1, 'PV2?']
+  order_detail: [RXO, NTE*, RXR+, 'component?']
+  timing: [TQ1, TQ2*]
+  common_order: [ORC, timing*, 'order_detail?', 'order_encoded?', RXD, RXR+, RXC*, observation+]
+  allergy: [AL1+, 'visit?']
+  timing_encoded: [TQ1, TQ2*]
+  order_encoded: [RXE, timing_encoded*, RXR+, RXC*]
+QBP_Qnn:
+  msg: [MSH, SFT*, QPD, 'RDF?', RCP, 'DSC?']
+MFR_M04:
+  mf_query: [MFE, CDM, PRC*]
+  msg: [MSH, SFT*, MSA, ERR*, 'QAK?', QRD, 'QRF?', MFI, mf_query+, 'DSC?']
+ADT_A45:
+  merge_info: [MRG, PV1]
+  msg: [MSH, SFT*, EVN, PID, 'PD1?', merge_info+]
+RER_RER:
+  patient: [PID, NTE*]
+  order: [ORC, RXE, RXR+, RXC*]
+  definition: [QRD, 'QRF?', 'patient?', order+]
+  msg: [MSH, MSA, ERR*, SFT*, definition+, 'DSC?']
+OMD_O03:
+  patient: [PID, 'PD1?', NTE*, 'patient_visit?', insurance*, 'GT1?', AL1*]
+  insurance: [IN1, 'IN2?', 'IN3?']
+  timing_diet: [TQ1, TQ2*]
+  patient_visit: [PV1, 'PV2?']
+  observation: [OBX, NTE*]
+  msg: [MSH, SFT*, NTE*, 'patient?', order_diet+, order_tray*]
+  timing_tray: [TQ1, TQ2*]
+  order_tray: [ORC, timing_tray*, ODT+, NTE*]
+  order_diet: [ORC, timing_diet*, 'diet?']
+  diet: [ODS+, NTE*, observation*]
+ESR_U02:
+  msg: [MSH, SFT*, EQU, 'ROL?']
+ADR_A19:
+  procedure: [PR1, ROL*]
+  insurance: [IN1, 'IN2?', IN3*, ROL*]
+  query_response: ['EVN?', PID, 'PD1?', ROL*, NK1*, PV1, 'PV2?', ROL*, DB1*, OBX*, AL1*, DG1*, 'DRG?', procedure*, GT1*, insurance*, 'ACC?', 'UB1?', 'UB2?']
+  msg: [MSH, SFT*, MSA, 'ERR?', 'QAK?', QRD, 'QRF?', query_response+, 'DSC?']
+QRY_Q01:
+  msg: [MSH, SFT*, QRD, 'QRF?', 'DSC?']
