@@ -1,13 +1,11 @@
 (ns etlp-hl7v2.core
-  (:require [clojure.string :as str]
+  (:require [cheshire.core] ; add parse component method 
+            [clojure.string :as str]
             [etlp-hl7v2.model.core :as model]
-            [cheshire.core]
-            ; add parse component method 
-            )
+            [etlp-hl7v2.model.builder :as model-builder]
+            [flatland.ordered.map :refer [ordered-map]])
   (:import [java.util.regex Pattern])
   (:gen-class))
-
-
 
 
 (defn record-start? [log-line]
@@ -134,3 +132,114 @@
              (if (empty? ss)
                acc
                (recur ss (inc field-idx) acc))))))]))
+
+;; FIX: grammar desc is a list?
+;; if after is nil = conj
+(defn append [after coll x]
+  (if after
+    (let [pattern (re-pattern (str after ".?"))]
+      (flatten (mapv #(if (re-find pattern %) [% x] %) coll)))
+    (if (vector? coll)
+      (conj coll x)
+      (seq (conj (vec coll) x)))))
+
+;; extension proposal
+;; [:ADT_A01 :ZBC [[:name "ZBC.1" :type ST :key "zbc1"]]]
+;; [:ADT_A01 :ZBC [[:name "ZBC.1" :type ST :key "zbc1"]] {:after #"PID"}]
+;; TODO: support "put after", not only append
+(defn apply-extension [schema [grammar segment-name segment-desc {after :after quant :quant}]]
+  (let [[grammar rule] (if (sequential? grammar) grammar [grammar :msg])
+        rule (or rule :msg)
+        messages-path (conj [:messages] grammar rule)
+        desc (map #(apply ordered-map %) segment-desc)]
+    (-> schema
+        (update-in messages-path (partial append after) (str (name segment-name) (or quant "?")))
+        (assoc-in [:segments segment-name] desc))))
+
+(defn parse-only
+  ([msg {extensions :extensions :as opts}]
+   (let [errs (is-valid-hl7? msg)]
+     (when-not (empty? errs)
+       (throw (Exception. (str/join "; " errs))))
+
+     (let [sch (model/schema)
+           sch (reduce apply-extension sch extensions)
+           seps (separators msg)
+           ctx {:separators seps
+                :schema sch}
+
+           segments (->> (split-by msg (:segment seps))
+                         (mapv str/trim)
+                         (filter #(> (.length %) 0))
+                         (mapv #(parse-segment ctx % opts)))
+
+           errors (mapcat #(get (second %) :__errors []) segments)]
+
+       (if (and (not (nil? (seq errors))) (get opts :strict? true))
+         [:error (pr-str errors)]
+         segments)))))
+
+(defn structurize-only [segments options]
+  (let [sch (model/schema)
+        sch (reduce apply-extension sch (:extensions options))
+        {c :code e :event} (get-in segments [0 1 :type])
+        msg-key (get-in sch [:messages :idx (keyword c) (keyword e)])
+        grammar (get-in sch [:messages (when [msg-key] (keyword msg-key))])]
+
+    (when-not grammar
+      (throw (Exception. (str "Do not know how to parse: " c "|" e " " (first segments)))))
+
+    (model-builder/build grammar (mapv #(keyword (first %)) segments) (fn [idx] (get-in segments [idx 1])) options)))
+
+(defn parse
+  ([msg] (parse msg {}))
+  ([msg opts]
+   (let [segments (parse-only msg opts)]
+     (if (= :error (first segments))
+       segments
+       (structurize-only segments opts)))))
+
+(defn get-segments [ctx seg]
+  (parse-segment ctx seg {}))
+
+(defn next-log-record [ctx hl7-lines]
+  (prn hl7-lines)
+  ;; (prn (get-segments ctx (first hl7-lines)))
+  (let [head (first hl7-lines)
+        body (take-while (complement record-start?) (rest hl7-lines))]
+    (remove nil? (conj body head))))
+
+
+(defn hl7-xform
+  "Returns a lazy sequence of lists like partition, but may include
+  partitions with fewer than n items at the end.  Returns a stateful
+  transducer when no collection is provided."
+  ([ctx]
+   (fn [rf]
+     (let [a (java.util.ArrayList.)]
+       (fn
+         ([] (rf))
+         ([result]
+          (let [result (if (.isEmpty a)
+                         result
+                         (let [v (vec (.toArray a))]
+                             ;;clear first!
+                           (.clear a)
+                           (unreduced (rf result v))))]
+            (rf result)))
+         ([result input]
+          (.add a input)
+          (if (and (> (count a) 1) (= true (record-start? input)))
+            (let [v (vec (.toArray a))]
+              (.clear a)
+              (.add a (last v))
+              (rf result (drop-last v)))
+            result))))))
+
+  ([ctx log-lines]
+   (lazy-seq
+    (when-let [s (seq log-lines)]
+      (let [record (doall (next-log-record ctx s))]
+        (cons record
+              (hl7-xform ctx (nthrest s (count record)))))))))
+

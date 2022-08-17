@@ -257,14 +257,8 @@ SQR_S25:
   schedule: [SCH, TQ1*, NTE*, 'patient?', resources+]
   msg: [MSH, MSA, ERR*, QAK, schedule*, 'DSC?']
 ORU_R01:
-  visit: [PV1, 'PV2?']
-  patient: [PID, 'PD1?', NTE*, NK1*, 'visit?']
-  timing_qty: [TQ1, TQ2*]
-  observation: [OBX, NTE*]
-  specimen: [SPM, OBX*]
-  order_observation: ['ORC?', OBR, NTE*, timing_qty*, 'CTD?', observation*, FT1*, CTI*, specimen*]
-  patient_result: ['patient?', order_observation+]
-  msg: [MSH, SFT*, patient_result+, 'DSC?']
+  msg: [MSH, clinical_events+]
+  clinical_events: ['PD1?', 'PV1?' ,'PID?', 'PV1?']
 OUL_R21:
   patient: [PID, 'PD1?', NTE*]
   visit: [PV1, 'PV2?']
