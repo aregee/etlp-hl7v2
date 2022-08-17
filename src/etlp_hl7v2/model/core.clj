@@ -34,12 +34,19 @@
       (slurp)
       (read-yaml)))
 
+(def resource-files {:types "types.yaml"
+                     :segments "segments.yaml"
+                     :messages "messages.yaml"})
 
-(defn schema []
+
+(defn ig-wrap-schema [parser-schema]
+  (fn []
 ; TODO: make this integrant component to allow flexible decelartion of parser schema on runtime
-  (if-let [shape @*model]
-    shape
-    (reset! *model
-            {:types (parse-yaml "types.yaml")
-             :segments (parse-yaml "segments.yaml")
-             :messages (parse-yaml "messages.yaml")})))
+    (if-let [shape @*model]
+      shape
+      (reset! *model
+              {:types (parse-yaml (:types parser-schema))
+               :segments (parse-yaml (:segments parser-schema))
+               :messages (parse-yaml (:messages parser-schema))}))))
+
+(def schema (ig-wrap-schema resource-files))

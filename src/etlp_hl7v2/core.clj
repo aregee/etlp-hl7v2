@@ -85,7 +85,7 @@
     v))
 
 (defn logger [line]
-  (prn line)
+  (clojure.pprint/pprint line)
   line)
 
 (defn parse-field [{sch :schema seps :separators :as ctx} {tpn :type c? :coll v :value :as f}]
@@ -150,18 +150,19 @@
 (defn apply-extension [schema [grammar segment-name segment-desc {after :after quant :quant}]]
   (let [[grammar rule] (if (sequential? grammar) grammar [grammar :msg])
         rule (or rule :msg)
+
         messages-path (conj [:messages] grammar rule)
         desc (map #(apply ordered-map %) segment-desc)]
     (-> schema
         (update-in messages-path (partial append after) (str (name segment-name) (or quant "?")))
         (assoc-in [:segments segment-name] desc))))
 
+
 (defn parse-only
   ([msg {extensions :extensions :as opts}]
    (let [errs (is-valid-hl7? msg)]
      (when-not (empty? errs)
        (throw (Exception. (str/join "; " errs))))
-
      (let [sch (model/schema)
            sch (reduce apply-extension sch extensions)
            seps (separators msg)
@@ -199,12 +200,27 @@
        segments
        (structurize-only segments opts)))))
 
-(defn get-segments [ctx seg]
-  (parse-segment ctx seg {}))
+
+(defn get-segments
+  ([ctx {extensions :extensions :as opts} msg]
+   (let [sch (model/schema)
+         sch (reduce apply-extension sch extensions)
+         seps (:separators ctx)
+         ctx! {:separators seps
+               :schema sch}
+
+         segments (->> msg
+                       (mapv str/trim)
+                       (filter #(> (.length %) 0))
+                       (mapv #(parse-segment ctx! % opts)))
+
+         errors (mapcat #(get (second %) :__errors []) segments)]
+
+     (if (and (not (nil? (seq errors))) (get {} :strict? true))
+       [:error (pr-str errors)]
+       segments))))
 
 (defn next-log-record [ctx hl7-lines]
-  (prn hl7-lines)
-  ;; (prn (get-segments ctx (first hl7-lines)))
   (let [head (first hl7-lines)
         body (take-while (complement record-start?) (rest hl7-lines))]
     (remove nil? (conj body head))))
@@ -243,3 +259,11 @@
         (cons record
               (hl7-xform ctx (nthrest s (count record)))))))))
 
+(defn parse-with-opts [opts segmts]
+  (structurize-only segmts opts))
+
+(defn transduce-hl7-stream [ctx opts]
+  (comp
+   (hl7-xform ctx)
+   (map (partial get-segments ctx opts))
+   (map (partial parse-with-opts opts))))
