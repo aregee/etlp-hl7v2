@@ -362,6 +362,10 @@ MSH:
 - {name: MSH.19, type: CE, key: language, desc: Principal Language Of Message}
 - {name: MSH.20, type: ID, key: alt_charset, desc: Alternate Character Set Handling Scheme, table: HL70356}
 - {name: MSH.21, type: EI, key: profile, desc: Message Profile Identifier, coll: true}
+- {name: MSH.22, type: XON, key: sending_responsible_organisation, desc: Sending Responsible Organization, coll: true}
+- {name: MSH.23, type: XON, key: receiving_reponsible_organisation, desc: Receiving Responsible Org, coll: true}
+- {name: MSH.24, type: HD, key: sending_network_address, desc: Sending Network Address, coll: true}
+- {name: MSH.25, type: HD, key: receiving_network_address, desc: Receiving network address, coll: true}
 ISD:
 - {name: ISD.1, type: NM, key: reference_interaction_number_, desc: Reference Interaction Number (unique identifier), req: true}
 - {name: ISD.2, type: CE, key: interaction_type_identifier, desc: Interaction Type Identifier, table: HL70368}
