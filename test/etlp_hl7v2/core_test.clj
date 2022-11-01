@@ -1,8 +1,11 @@
 (ns etlp-hl7v2.core-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.string :as str]
+            [clojure.test :refer :all]
+            [etlp-hl7v2.core :refer [transduce-hl7-stream indexed-map is-valid-hl7?
+                                     not-empty? parse parse-segment parse-value
+                                     separators split-by logger]]
             [etlp-hl7v2.model.core :as model]
             [flatland.ordered.map :refer [ordered-map]]
-            [etlp-hl7v2.core :refer [is-valid-hl7? separators split-by indexed-map not-empty? parse-value parse-segment]]
             [matcho.core :refer [match]]))
 
 
@@ -30,9 +33,74 @@ IN1|2|0423|2304|AETNA PPO|PO BOX 14079^PO BOX 14079^LEXINGTON^KY^40512|||0811401
 IN2||354221840|0000007496^RETIRED|||||||||||||||||||||||||||||||||Y|||CHR||||W|||RETIRED|||||||||||||||||(818)249-3361||||||||C"])
 
 
+
 (def pid-segment "PID|1|010107111^^^MS4^PN^|1609220^^^MS4^MR^001|1609220^^^MS4^MR^001|BARRETT^JEAN^SANDY^^||19440823|F||C|STRAWBERRY AVE^FOUR OAKS LODGE^ALBUKERKA^CA^98765^USA^^||(111)222-3333||ENG|W|CHR|111155555550^^^MS4001^AN^001|123-22-1111||||OKLAHOMA|||||||N")
 
+(def bulk-message (slurp "seeds/adt-a04-2.hl7"))
 
+(def lines (str/split bulk-message #"\n"))
+
+(def schema (model/schema))
+
+(def seps {:field \|,
+           :component \^,
+           :subcomponet \&,
+           :repetition \~,
+           :escape \\})
+
+(def ctx
+  {:schema schema
+   :separators seps})
+
+(def extensions
+  [[:ADT_A01 :ZBC [[:name "ZBC.1" :type "ST" :key "zbc_one"]
+                   [:name "ZBC.2" :type "ST" :key "zbc_two"]
+                   [:name "ZBC.3" :type "ST" :key "zbc_three"]]]
+   [:ADT_A01 :ZG1 [[:name "ZG1.1" :type "ST" :key "zg1_one"]
+                   [:name "ZG1.2" :type "ST" :key "zg1_two"]
+                   [:name "ZG1.3" :type "ST" :key "zg1_three"]
+                   [:name "ZG1.4" :type "ST" :key "zg1_four"]] {:after "GT1" :quant "*"}]
+   [:ADT_A01 :ZPD [[:name "ZPD.1" :type "ST" :key "zpd1"]
+                   [:name "ZPD.2" :type "ST" :key "zpd2"]
+                   [:name "ZPD.3" :type "ST" :key "zpd3"]
+                   [:name "ZPD.4" :type "ST" :key "zpd4"]
+                   [:name "ZPD.5" :type "ST" :key "zpd5"]
+                   [:name "ZPD.6" :type "ST" :key "zpd6"]
+                   [:name "ZPD.7" :type "ST" :key "zpd7"]
+                   [:name "ZPD.8" :type "ST" :key "zpd8"]
+                   [:name "ZPD.9" :type "ST" :key "zpd9"]
+                   [:name "ZPD.10" :type "ST" :key "zpd10"]
+                   [:name "ZPD.11" :type "ST" :key "zpd11"]
+                   [:name "ZPD.12" :type "ST" :key "zpd12"]] {:after "PID"}]])
+;; ORU_R01:
+  ;; msg: [MSH, clinical_events+]
+  ;; clinical_events: ['PD1?', 'PV1?' ,'PID?', 'PV1?']
+
+;; (def overrides [[:ORU_R01 [[:msg  ["MSH" "clinical_events+"]]
+;;                            [:clinical_events ["PD1?" "PV1?" "PID?" "PV1?"]]]]])
+
+;; (defn override-rules [schema [gm rules]]
+;;   (let [mp (conj [:messages] gm)]
+;;     (prn mp)
+;;     (prn rules)
+;;     ;; (update-in schema [mp] rules)
+;;     (conj schema {gm (ordered-map rules)})
+;;     ;; ( prn )
+;;     (prn (get-in schema mp))))
+
+;; (apply (partial override-rules schema) overrides)
+
+(def composed-xf (comp
+                  (transduce-hl7-stream ctx {:extensions extensions})
+                  ;; (map (fn [row]
+                  ;;        (map (fn [event]
+                  ;;               (merge {} (:MSH row) (:PV1 event) (:PD1 event) (:PID event))) (:clinical_events row))))
+                  ;; (mapcat (fn [part] part))
+                  (map logger)))
+
+;; (def list-messages (into [] composed-xf lines))
+;; (parse bulk-message extensions)
+;; (clojure.pprint/pprint (count list-messages))
 
 
 (deftest truncated-hl7-test
