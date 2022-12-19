@@ -36,9 +36,9 @@ IN2||354221840|0000007496^RETIRED|||||||||||||||||||||||||||||||||Y|||CHR||||W||
 
 (def pid-segment "PID|1|010107111^^^MS4^PN^|1609220^^^MS4^MR^001|1609220^^^MS4^MR^001|BARRETT^JEAN^SANDY^^||19440823|F||C|STRAWBERRY AVE^FOUR OAKS LODGE^ALBUKERKA^CA^98765^USA^^||(111)222-3333||ENG|W|CHR|111155555550^^^MS4001^AN^001|123-22-1111||||OKLAHOMA|||||||N")
 
-(def bulk-message (slurp "seeds/adt-a04-2.hl7"))
+;; (def bulk-message (slurp "seeds/adt-a04-2.hl7"))
 
-(def lines (str/split bulk-message #"\n"))
+;; (def lines (str/split bulk-message #"\n"))
 
 (def schema (model/schema))
 
