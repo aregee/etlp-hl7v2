@@ -1,4 +1,4 @@
-(defproject org.clojars.aregee/etlp-hl7v2 "0.1.0-SNAPSHOT"
+(defproject org.clojars.aregee/etlp-hl7v2 "0.1.0"
   :description "Extensible bottomup hl7v2 parser with transducer interface"
   :url "http://github.com/aregee/etlp-hl7v2"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
