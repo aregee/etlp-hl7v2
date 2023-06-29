@@ -1,6 +1,6 @@
 # etlp-hl7v2
 
-A Clojure library designed to ... parse and transduce hl7 messages.
+A Clojure library designed to parse HL7v2 Messages and exposes a Transducer interface to parse stream of hl7 messages.
 
 
 ## Usage
