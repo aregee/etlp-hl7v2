@@ -7,6 +7,6 @@
                  [clj-commons/clj-yaml "0.7.0"]
                  [cheshire "5.11.0"]
                  [healthsamurai/matcho "0.3.9"]]
-  :deploy-repositories {"releases" {:url "https://repo.clojars.org" :creds :auth}}
+  :deploy-repositories {"releases" {:url "https://repo.clojars.org" :creds :gpg}}
   :repl-options {:init-ns etlp-hl7v2.core}
   :profiles {:test {:dependencies [[healthsamurai/matcho "0.3.9"]]}})

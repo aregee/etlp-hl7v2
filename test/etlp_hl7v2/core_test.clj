@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.test :refer :all]
             [etlp-hl7v2.core :refer [transduce-hl7-stream indexed-map is-valid-hl7?
-                                     not-empty? parse parse-segment parse-value
+                                     not-empty? parse parse-segment parse-value parse-only
                                      separators split-by logger]]
             [etlp-hl7v2.model.core :as model]
             [flatland.ordered.map :refer [ordered-map]]
@@ -31,6 +31,14 @@ IN1|1|0423|MEDICARE IP|^^^^     |||||||19951001|||MCR|BARRETT^JEAN^S^^|A|1930101
 IN2||354221840|0000007496^RETIRED|||354221840A||||||||||||||||||||||||||||||Y|||CHR||||W|||RETIRED|||||||||||||||||(818)249-3361||||||||C
 IN1|2|0423|2304|AETNA PPO|PO BOX 14079^PO BOX 14079^LEXINGTON^KY^40512|||081140101400020|RETIRED|||20130101|||COM|BARRETT^JEAN^S^^|A|19301013|2820 SYCAMORE AVE^TWELVE OAKS LODGE^MONTROSE^CA^91214^USA^^^|||2||||||||||||||811001556|||||||F|^^^^00000^|N||||010107127
 IN2||354221840|0000007496^RETIRED|||||||||||||||||||||||||||||||||Y|||CHR||||W|||RETIRED|||||||||||||||||(818)249-3361||||||||C"])
+
+(def valid-oru "MSH|^~\\&|LABSYS|HOSPITAL|EHR|HOSPITAL|20240305120000||ORU^R01|123456|P|2.5
+PID|1||123456^^^HOSPITAL^MR||DOE^JOHN^A||19800101|M|||123 MAIN ST^^CITY^ST^12345^USA
+ORC|RE|56789^LABSYS||98765^EHR|CM
+OBR|1|56789^LABSYS|98765^LABSYS|88304^PATHOLOGY REPORT^L|||20240304100000||||||||1234^SMITH^JAMES|||20240304103000|||F||12345^EHR||||||||||F
+OBX|1|TX|88304^PATHOLOGY REPORT^L||Gross description: Received a 2 cm biopsy specimen.|||N
+OBX|2|TX|88304^PATHOLOGY REPORT^L||Microscopic description: Squamous epithelium with no malignancy.|||N
+OBX|3|TX|88304^PATHOLOGY REPORT^L||Diagnosis: Benign tissue sample.|||N")
 
 
 
@@ -99,7 +107,7 @@ IN2||354221840|0000007496^RETIRED|||||||||||||||||||||||||||||||||Y|||CHR||||W||
                   (map logger)))
 
 ;; (def list-messages (into [] composed-xf lines))
-;; (parse bulk-message extensions)
+(parse valid-oru {:extensions extensions})
 ;; (clojure.pprint/pprint (count list-messages))
 
 
@@ -174,64 +182,64 @@ IN2||354221840|0000007496^RETIRED|||||||||||||||||||||||||||||||||Y|||CHR||||W||
     (match
      (parse-segment
       ctx "MSH|^~\\&|AccMgr|1|||20151015200643||ADT^A01|599102|P|2.3|foo||" {})
-      ["MSH"
-       {:type {:code "ADT", :event "A01"},
-        :id "599102",
-        :encoding "^~\\&",
-        :seqnum "foo",
-        :version {:id "2.3"},
-        :proc_id {:proc_id "P"},
-        :datetime {:time "20151015200643"},
-        :facility {:ns "1"},
-        :app {:ns "AccMgr"}
-        :separator "|"}]))
+     ["MSH"
+      {:type {:code "ADT", :event "A01"},
+       :id "599102",
+       :encoding "^~\\&",
+       :seqnum "foo",
+       :version {:id "2.3"},
+       :proc_id {:proc_id "P"},
+       :datetime {:time "20151015200643"},
+       :facility {:ns "1"},
+       :app {:ns "AccMgr"}
+       :separator "|"}]))
 
   (testing "Assert Field Segments"
     (match
      (parse-segment
       ctx  pid-segment {})
-      ["PID"
-       {:religion {:code "CHR"},
-        :patient_id  {:value "010107111",
-                      :authority {:ns "MS4"},
-                      :system "PN"},
-        :alternate_id [{:value "1609220",
-                        :authority {:ns "MS4"},
-                        :system "MR",
-                        :facility {:ns "001"}}],
-        :account_number {:value "111155555550",
-                         :authority {:ns "MS4001"},
-                         :system "AN",
-                         :facility {:ns "001"}},
-        :race [{:code "C"}],
-        :gender "F",
-        :birth_date {:time "19440823"},
-        :primary_language  {:code "ENG"},
-        :home_phone [{:phone "(111)222-3333"}],
-        :ssn_number "123-22-1111",
-        :birth_place "OKLAHOMA",
-        :address [{:street {:text "STRAWBERRY AVE"}
-                   :text "FOUR OAKS LODGE",
-                   :city "ALBUKERKA",
-                   :state "CA",
-                   :postal_code "98765",
-                   :country "USA"}],
-        :set_id "1",
-        :name [{:family {:surname "BARRETT"},
-                :given "JEAN",
-                :initials "SANDY"}],
-        :identifiers [{:value "1609220",
+     ["PID"
+      {:religion {:code "CHR"},
+       :patient_id  {:value "010107111",
+                     :authority {:ns "MS4"},
+                     :system "PN"},
+       :alternate_id [{:value "1609220",
                        :authority {:ns "MS4"},
                        :system "MR",
                        :facility {:ns "001"}}],
-        :marital_status {:code "W"},
-        :death_indicator "N"}])
+       :account_number {:value "111155555550",
+                        :authority {:ns "MS4001"},
+                        :system "AN",
+                        :facility {:ns "001"}},
+       :race [{:code "C"}],
+       :gender "F",
+       :birth_date {:time "19440823"},
+       :primary_language  {:code "ENG"},
+       :home_phone [{:phone "(111)222-3333"}],
+       :ssn_number "123-22-1111",
+       :birth_place "OKLAHOMA",
+       :address [{:street {:text "STRAWBERRY AVE"}
+                  :text "FOUR OAKS LODGE",
+                  :city "ALBUKERKA",
+                  :state "CA",
+                  :postal_code "98765",
+                  :country "USA"}],
+       :set_id "1",
+       :name [{:family {:surname "BARRETT"},
+               :given "JEAN",
+               :initials "SANDY"}],
+       :identifiers [{:value "1609220",
+                      :authority {:ns "MS4"},
+                      :system "MR",
+                      :facility {:ns "001"}}],
+       :marital_status {:code "W"},
+       :death_indicator "N"}])
 
     (match
      (parse-segment
       ctx "PID|1|312626^^^^^Main Lab&05D0557149&CLIA|0362855^^^^^Main Lab&05D0557149&CLIA|^^^^^Main Lab&05D0557149&CLIA|LOPEZ^ADALBERTO||19450409|M|||8753 APPERSON ST^^SUNLAND^CA^91040||(818)429-5631|||||000016715153|572458313" {})
 
-      ["PID" {:identifiers [{:value "0362855",
-                             :facility {:ns "Main Lab", :uid "05D0557149", :type "CLIA"}}]}])))
+     ["PID" {:identifiers [{:value "0362855",
+                            :facility {:ns "Main Lab", :uid "05D0557149", :type "CLIA"}}]}])))
 
 

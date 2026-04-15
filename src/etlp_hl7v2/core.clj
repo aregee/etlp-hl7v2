@@ -200,6 +200,57 @@
        segments
        (structurize-only segments opts)))))
 
+(defn validate
+  "Parses the message leniently and returns a map with :result (parsed data or nil),
+   :valid (boolean), and :warnings (vector of structural/spec issues).
+   Always attempts to parse; collects issues instead of failing.
+   Useful for upstream services to check spec conformance before EHR submission."
+  ([msg] (validate msg {}))
+  ([msg opts]
+   (let [lenient-opts (assoc opts :strict? false)
+         segments (parse-only msg lenient-opts)]
+     (if (= :error (first segments))
+       {:result nil
+        :valid false
+        :warnings [{:type "PARSE_ERROR"
+                    :message (second segments)}]}
+       (let [structured (structurize-only segments lenient-opts)
+             meta-warnings (or (:warnings (meta structured)) [])
+             ;; Also run strict validation to capture all issues
+             strict-segments (parse-only msg (assoc opts :strict? true))
+             strict-errors (when (= :error (first strict-segments))
+                             [{:type "FIELD_VALIDATION_ERROR"
+                               :message (second strict-segments)}])
+             strict-structure-errors (when-not (= :error (first strict-segments))
+                                      (let [strict-result (structurize-only strict-segments (assoc opts :strict? true))]
+                                        (when (= :error (first strict-result))
+                                          [{:type "STRUCTURE_ERROR"
+                                            :message (second strict-result)}])))
+             ;; Detect segments present in message but not in parsed output
+             segment-names (mapv #(keyword (first %)) segments)
+             present-segments (set (filter #(not= :MSH %) segment-names))
+             parsed-keys (set (keys (if (= :error (first structured)) {} structured)))
+             ;; Collect all warnings
+             all-warnings (vec (concat meta-warnings
+                                       strict-errors
+                                       strict-structure-errors))]
+         {:result (if (= :error (first structured)) nil structured)
+          :valid (empty? all-warnings)
+          :warnings all-warnings})))))
+
+(defn get-grammar-spec
+  "Returns the expected message grammar for a given message type code and event.
+   Useful for upstream services to understand what segments are required/optional."
+  [code event & [{extensions :extensions}]]
+  (let [sch (model/schema)
+        sch (if extensions (reduce apply-extension sch extensions) sch)
+        msg-key (get-in sch [:messages :idx (keyword code) (keyword event)])
+        grammar (get-in sch [:messages (when [msg-key] (keyword msg-key))])]
+    (when grammar
+      {:message_type (str code "^" event)
+       :grammar_key (name msg-key)
+       :rules (into {} (map (fn [[k v]] [(name k) v]) grammar))})))
+
 
 (defn get-segments
   ([ctx {extensions :extensions :as opts} msg]
